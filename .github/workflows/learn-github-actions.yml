@@ -18,7 +18,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            echo ${{github}} &&
+            echo ${{github.run_id}}+' '+${{github.run_number}}+' '+${{github.job}}+' '+${{github.action}} &&
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
