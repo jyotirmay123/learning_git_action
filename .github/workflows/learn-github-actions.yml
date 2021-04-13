@@ -15,7 +15,7 @@ jobs:
 
       - name: Fetch Jobs and status above
         run: |
-          echo "JOB_ID=${{context.job.container.id}}, STATUS=${{context.job.status}}"
+          echo "hi"
 
       - name: RUN_ID for manually triggered run
         if: github.event_name == 'issue_comment'
@@ -27,5 +27,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Thanks for reporting!'
+              body: '👋 Thanks for reporting! JOB_ID=${{context.job.container.id}}, STATUS=${{context.job.status}}.'
             })
