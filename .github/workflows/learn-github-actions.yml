@@ -27,5 +27,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Thanks for reporting! JOB_ID='+context.job.container.id+', STATUS='+context.job.status
+              body: '👋 Thanks for reporting! JOB_ID='+context.job+', STATUS='+context.job.status
             })
