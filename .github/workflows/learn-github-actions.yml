@@ -23,10 +23,10 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            echo "${{github.job}}" &&
+            echo "${{github}}" &&
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Thanks for reporting! JOB_ID='+context.job+', STATUS='+context.job.status+'github_jobid='+github.job
+              body: '👋 Thanks for reporting! JOB_ID='+context.job+', STATUS='+context.job.status+'github_jobid='
             })
