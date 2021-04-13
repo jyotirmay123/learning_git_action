@@ -23,7 +23,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            echo ${{ithub.job}} &&
+            echo ${{github.job}} &&
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
