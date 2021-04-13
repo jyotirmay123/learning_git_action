@@ -1,6 +1,7 @@
 name: learn-github-actions
 on: 
-  [push]
+  schedule: [{cron: '00 06 * * *'}]
+  pull_request: { branches: [master, main] }
   issue_comment:
     types: [created]
 jobs:
