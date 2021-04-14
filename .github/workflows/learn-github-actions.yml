@@ -23,5 +23,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: " \"<https://github.com/7Learnings/repo/actions/runs/${{ GITHUB_RUN_ID | GITHUB_WORKFLOW }}> run ${{ job.status }} (event: ${{ GITHUB_EVENT_NAME }})\" "
+              body: " \"<https://github.com/7Learnings/repo/actions/runs/${{ GITHUB_RUN_ID }}> run ${{ job.status }} (event: ${{ GITHUB_EVENT_NAME }})\" "
             })
