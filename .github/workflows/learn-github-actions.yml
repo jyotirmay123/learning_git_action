@@ -44,6 +44,9 @@ jobs:
       - name: Post status back to git
         if: github.event_name == 'issue_comment'
         uses: actions/github-script@v3
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
