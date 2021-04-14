@@ -12,16 +12,15 @@ jobs:
         run: |
           echo "hi"
 
-      - name: RUN_ID for manually triggered run
+      - name: Post status back to git
         if: github.event_name == 'issue_comment'
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            echo ${{github.run_id}}+' '+${{github.run_number}}+' '+${{github.job}}+' '+${{github.action}} &&
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Thanks for reporting! JOB_ID='+context.job+', STATUS='+context.job.status+'github_jobid='
+              body: " \"<https://github.com/7Learnings/repo/actions/runs/$GITHUB_RUN_ID|$GITHUB_WORKFLOW> run ${{ job.status }} (event: $GITHUB_EVENT_NAME)\" "
             })
