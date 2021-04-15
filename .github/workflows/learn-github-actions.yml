@@ -9,6 +9,11 @@ jobs:
   one:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+        
       - name: Post status back to git
         if: github.event_name == 'issue_comment'
         uses: actions/github-script@v3
@@ -23,10 +28,7 @@ jobs:
               [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} )"
             })
 
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
+      
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJSON(job) }}
