@@ -54,7 +54,7 @@ jobs:
           result-encoding: string
 
       - name: get new comment id
-        run: echo "${{steps.pingback.outputs.result}}"
+        run: echo "${{steps}}"
 
       - name: Dump GitHub context
         env:
