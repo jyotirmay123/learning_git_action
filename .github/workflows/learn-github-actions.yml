@@ -13,23 +13,6 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
-
-      - name: Pingback Init
-        if: github.event_name == 'issue_comment'
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.updateComment({
-              comment_id: "${{github.event.comment.id}}",
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              edit-mode: append,
-              body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
-              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
-            })
-
-      
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJSON(job) }}
@@ -54,6 +37,20 @@ jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
+      - name: Pingback Init
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.updateComment({
+              comment_id: "${{github.event.comment.id}}",
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
+              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
+            })
+
       - name: Fetch Jobs and status above
         run: |
           echo "hi"
@@ -68,6 +65,7 @@ jobs:
               comment_id: "${{github.event.comment.id}}",
               owner: context.repo.owner,
               repo: context.repo.repo,
-              edit-mode: append,
-              body: " -- run **${{ job.status }}** (event: ${{ github.event_name }}) \n \n "
+              body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
+              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n \ 
+              -- run **${{ job.status }}** (event: ${{ github.event_name }}) \n \n "
             })
