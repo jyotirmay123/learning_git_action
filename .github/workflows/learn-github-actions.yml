@@ -51,10 +51,9 @@ jobs:
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
               -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
             })
-          result-encoding: string
 
       - name: get new comment id
-        run: echo "${{ steps }}"
+        run: echo "${{ toJSON(steps) }}"
 
       - name: Dump GitHub context
         env:
