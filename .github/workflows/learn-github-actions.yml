@@ -66,5 +66,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
-              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n \"
+              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n \
+              -- run **${{ job.status }}**(event: ${{ github.event_name }}) \n \n "
             })
