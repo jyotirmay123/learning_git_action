@@ -54,7 +54,7 @@ jobs:
           result-encoding: string
 
       - name: get new comment id
-        run: echo "${{steps}}"
+        run: echo "${{ toJSON(steps) }}"
 
       - name: Dump GitHub context
         env:
