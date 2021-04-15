@@ -50,11 +50,11 @@ jobs:
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
               -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
             })
-            echo $github
 
-      - name: Fetch Jobs and status above
-        run: |
-          echo "hi"
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       - name: Pingback Status Update
         if: github.event_name == 'issue_comment'
