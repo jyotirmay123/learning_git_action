@@ -43,13 +43,13 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.updateComment({
+            github.issues.createComment({
               comment_id: "${{github.event.comment.id}}",
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
               -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
-            })
+            }) >> $res | echo $res 
 
       - name: Fetch Jobs and status above
         run: |
