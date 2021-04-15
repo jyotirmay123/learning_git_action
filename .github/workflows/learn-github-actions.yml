@@ -37,20 +37,7 @@ jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
-      - name: Pingback Init
-        if: github.event_name == 'issue_comment'
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.updateComment({
-              comment_id: "${{github.event.comment.id}}",
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
-              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
-            })
-
+     
       - name: Fetch Jobs and status above
         run: |
           echo "hi"
@@ -67,5 +54,5 @@ jobs:
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
               -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n \ 
-              -- run **${{ job.status }}** (event: ${{ github.event_name }}) \n \n "
+              -- run **${{ job.status }}**(event: ${{ github.event_name }}) \n \n "
             })
