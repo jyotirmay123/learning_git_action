@@ -9,6 +9,20 @@ jobs:
   one:
     runs-on: ubuntu-latest
     steps:
+      - name: Post status back to git
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
+              [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} )"
+            })
+
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
@@ -47,8 +61,8 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
+            github.issues.updateComment({
+              comment_id: github.event.comment.id,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
