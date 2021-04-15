@@ -20,12 +20,12 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
+            github.issues.updateComment({
+              comment_id: "${{github.event.comment.id}}",
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
-              [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} )"
+              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} )"
             })
 
       
@@ -68,6 +68,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
-              [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \
-              run **${{ job.status }}** (event: ${{ github.event_name }})"
+              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \
+              -- run **${{ job.status }}** (event: ${{ github.event_name }})"
             })
