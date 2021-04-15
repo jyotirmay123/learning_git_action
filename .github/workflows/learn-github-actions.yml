@@ -13,7 +13,7 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
-        
+
       - name: Post status back to git
         if: github.event_name == 'issue_comment'
         uses: actions/github-script@v3
@@ -64,7 +64,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.updateComment({
-              comment_id: github.event.comment.id,
+              comment_id: "${{github.event.comment.id}}",
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
