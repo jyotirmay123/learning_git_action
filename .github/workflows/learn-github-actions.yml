@@ -40,12 +40,11 @@ jobs:
       - name: Pingback Init
         if: github.event_name == 'issue_comment'
         uses: actions/github-script@v3
-        debug: true
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
-              comment_id: "${{github.event.comment.id}}",
+            echo github.issues.createComment({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
