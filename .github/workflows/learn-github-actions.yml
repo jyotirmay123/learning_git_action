@@ -26,7 +26,7 @@ jobs:
           
 
       - name: get new comment id
-        script: |
+        run: 
           echo ${{steps.pingback.outputs.result.data}}
 
       - name: Dump GitHub context
@@ -41,7 +41,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.updateComment({
-              comment_id: "${{github.event.comment.id}}",
+              comment_id: "${{steps.pingback.outputs.result.data.id}}",
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: " \n \n \
