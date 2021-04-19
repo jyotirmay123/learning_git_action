@@ -27,7 +27,7 @@ jobs:
 
       - name: get new comment id
         run: |
-          COMMENT_ID='${{steps.pingback.outputs.result.data.id}}'
+          COMMENT_ID=$(jq -c '.result | fromjson' ${{steps.pingback.outputs}} | jg .data.id)
           echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
 
       - name: Dump GitHub context
