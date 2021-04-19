@@ -5,7 +5,9 @@ https://github.com/actions/github-script
 
 
 
-
+- No blank space in between
+- better use double quotes
+- $ is used as @ in c/cpp. Get the value at that variable.
 
 
 one:
