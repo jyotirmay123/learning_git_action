@@ -30,7 +30,7 @@ jobs:
           STEP_CONTEXT: ${{ toJSON(steps) }}
         uses: actions/github-script@v3
         with:
-          script: |
+          script: >-
             echo "${STEP_CONTEXT}"
 
       - name: Dump GitHub context
