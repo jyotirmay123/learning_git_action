@@ -26,7 +26,7 @@ jobs:
           
 
       - name: get new comment id
-        run: >-
+        script: |
           echo ${{steps.pingback.outputs.result.data}}
 
       - name: Dump GitHub context
