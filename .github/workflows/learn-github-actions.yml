@@ -29,8 +29,9 @@ jobs:
         env:
           STEP_CONTEXT: ${{ toJSON(steps) }}
         uses: actions/github-script@v3
-        script: |
-          echo "STEP_CONTEXT"
+        with:
+          script: |
+            echo "STEP_CONTEXT"
 
       - name: Dump GitHub context
         env:
