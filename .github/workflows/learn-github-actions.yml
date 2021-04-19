@@ -29,7 +29,7 @@ jobs:
         env:
           STP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
         run: |
-          COMMENT_ID=$(jq -c '.result | fromjson' $STP_CONTEXT | jq .data.id)
+          COMMENT_ID=$($STP_CONTEXT | jq '.result | fromjson' | jq .data.id)
           echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
 
       - name: Dump GitHub context
