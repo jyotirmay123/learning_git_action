@@ -28,6 +28,7 @@ jobs:
       - name: get new comment id
         env:
           STEP_CONTEXT: ${{ toJSON(steps) }}
+        uses: actions/github-script@v3
         script: |
           echo "STEP_CONTEXT"
 
