@@ -33,7 +33,8 @@ jobs:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT" && echo "${{env.COMMENT_ID}}"
+          STEP_CTX: ${{ toJSON(steps.pingback.outputs.result) }}
+        run: echo "$GITHUB_CONTEXT" && echo "$STEP_CTX"
 
       - name: Pingback Status Update
         if: github.event_name == 'issue_comment'
