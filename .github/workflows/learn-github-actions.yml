@@ -26,13 +26,14 @@ jobs:
           
 
       - name: get new comment id
-        run: 
-          echo ${{steps.pingback.outputs.result.data}}
+        run: |
+          COMMENT_ID='${{steps.pingback.outputs.result.data.id}}'
+          echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
 
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
+        run: echo "$GITHUB_CONTEXT" && echo "${{env.COMMENT_ID}}"
 
       - name: Pingback Status Update
         if: github.event_name == 'issue_comment'
@@ -41,7 +42,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.updateComment({
-              comment_id: "${{steps.pingback.outputs.result.data.id}}",
+              comment_id: "${{env.COMMENT_ID}}",
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: " \n \n \
