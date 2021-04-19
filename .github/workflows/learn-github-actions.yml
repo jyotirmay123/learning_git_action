@@ -53,7 +53,9 @@ jobs:
             })
 
       - name: get new comment id
-        run: echo "${{ toJSON(steps) }}"
+        env:
+          STEP_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$STEP_CONTEXT"
 
       - name: Dump GitHub context
         env:
