@@ -55,7 +55,7 @@ jobs:
 
       - name: get new comment id
         env:
-          STEP_CONTEXT: ${{ toJSON(steps).pingback.outputs.result }}
+          STEP_CONTEXT: ${{ toJSON(steps)[pingback] }}
         run: echo "$STEP_CONTEXT"
 
       - name: Dump GitHub context
