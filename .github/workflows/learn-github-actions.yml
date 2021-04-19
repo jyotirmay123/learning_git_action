@@ -29,7 +29,7 @@ jobs:
         env:
           STEP_CONTEXT: ${{ toJSON(steps) }}
         run: >-
-          echo ${{step.pingback}}
+          echo ${{steps.pingback.outputs.result}}
 
       - name: Dump GitHub context
         env:
