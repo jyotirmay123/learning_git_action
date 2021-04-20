@@ -26,7 +26,7 @@ jobs:
             })
 
       - name: Get Comment ID
-        if: github.event_name == 'issue_comment' && cancelled()
+        if: github.event_name == 'issue_comment' && always()
         env:
           STEP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
         run: |
