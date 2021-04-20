@@ -15,6 +15,7 @@ jobs:
         id: pingback
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: JSON
           script: |
             return github.issues.createComment({
               issue_number: context.issue.number,
@@ -29,6 +30,7 @@ jobs:
         env:
           STP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
         run: |
+          echo ${{steps.pingback.outputs.result}}
           COMMENT_ID=$(echo $STP_CONTEXT | jq '.result | fromjson' | jq .data.id)
           echo $COMMENT_ID
           echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
