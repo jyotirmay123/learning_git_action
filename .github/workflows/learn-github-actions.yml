@@ -24,16 +24,6 @@ jobs:
               body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
               -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
             })
-          
-
-      - name: get new comment id
-        env:
-          STP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
-        run: |
-          echo ${{steps.pingback.outputs.result.data}}
-          COMMENT_ID=$(echo $STP_CONTEXT | jq '.result | fromjson' | jq .data.id)
-          echo $COMMENT_ID
-          echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
 
       - name: Dump GitHub context
         env:
@@ -52,7 +42,7 @@ jobs:
             COMMENT_ID=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id)
             echo $COMMENT_ID
             github.issues.updateComment({
-              comment_id: "$COMMENT_ID",
+              comment_id: ${{ COMMENT_ID }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: " > [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \

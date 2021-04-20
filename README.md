@@ -37,3 +37,14 @@ one:
         env:
             MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
+
+
+
+ - name: get new comment id
+        env:
+          STP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
+        run: |
+          echo ${{steps.pingback.outputs.result.data}}
+          COMMENT_ID=$(echo $STP_CONTEXT | jq '.result | fromjson' | jq .data.id)
+          echo $COMMENT_ID
+          echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
