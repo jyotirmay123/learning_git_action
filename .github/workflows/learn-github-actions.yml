@@ -25,24 +25,22 @@ jobs:
               -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
             })
 
-      - name: Dump GitHub context
+      - name: Get Comment ID
+        if: github.event_name == 'issue_comment'
         env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-          STEP_CTX: ${{ toJSON(env) }}
-        run: echo "$GITHUB_CONTEXT" && echo "$STEP_CTX"
+          STEP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
+        run: |
+          COMMENT_ID=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id)
+          echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
 
       - name: Pingback Status Update
         if: github.event_name == 'issue_comment'
         uses: actions/github-script@v3
-        env:
-          STEP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: >-
-            COMMENT_ID=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id)
-            echo $COMMENT_ID
+          script: |
             github.issues.updateComment({
-              comment_id: ${COMMENT_ID},
+              comment_id: ${{ env.COMMENT_ID }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: " > [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
