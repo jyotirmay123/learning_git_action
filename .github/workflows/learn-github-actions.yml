@@ -44,11 +44,15 @@ jobs:
       - name: Pingback Status Update
         if: github.event_name == 'issue_comment'
         uses: actions/github-script@v3
+        env:
+          STEP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            COMMENT_ID=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id)
+            echo $COMMENT_ID
             github.issues.updateComment({
-              comment_id: "${{steps.pingback.outputs.result.data.id}}",
+              comment_id: "$COMMENT_ID",
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: " > [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
