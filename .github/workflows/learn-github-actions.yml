@@ -15,7 +15,7 @@ jobs:
         id: pingback
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: JSON
+          result-encoding: json
           script: |
             return github.issues.createComment({
               issue_number: context.issue.number,
