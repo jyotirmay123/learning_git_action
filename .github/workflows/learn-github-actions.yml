@@ -38,8 +38,8 @@ jobs:
           STEP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            COMMENT_ID=${ echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id }
+          run: |
+            COMMENT_ID=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id)
             echo $COMMENT_ID
             github.issues.updateComment({
               comment_id: ${COMMENT_ID},
