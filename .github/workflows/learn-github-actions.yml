@@ -31,7 +31,9 @@ jobs:
           STEP_CONTEXT: ${{ toJSON(steps.pingback.outputs) }}
         run: |
           COMMENT_ID=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id)
+          COMMENT_BODY=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.body)
           echo "COMMENT_ID=$COMMENT_ID" >> $GITHUB_ENV
+          echo "COMMENT_BODY=$COMMENT_BODY" >> $GITHUB_ENV
 
       - name: Pingback Status Update
         if: github.event_name == 'issue_comment' && always()
@@ -43,7 +45,6 @@ jobs:
               comment_id: ${{ env.COMMENT_ID }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: " > [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
-              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n \
+              body: ${{ env.COMMENT_BODY }}+"\
               -- run **${{ job.status }}**(event: ${{ github.event_name }}) \n \n "
             })
