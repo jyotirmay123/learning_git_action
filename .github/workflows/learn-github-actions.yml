@@ -42,7 +42,7 @@ jobs:
             COMMENT_ID=$(echo $STEP_CONTEXT | jq '.result | fromjson' | jq .data.id)
             echo $COMMENT_ID
             github.issues.updateComment({
-              comment_id: ${{ COMMENT_ID }},
+              comment_id: ${COMMENT_ID},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: " > [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
