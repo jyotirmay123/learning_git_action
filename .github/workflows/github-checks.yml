@@ -1,4 +1,4 @@
-name: "examples"
+name: "github-checks"
 on: [push]
 
 jobs:
