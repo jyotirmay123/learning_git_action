@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Link to toolz app
-        uses: ./
+        uses: yuzutech/annotations-action@v0.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: toolz
