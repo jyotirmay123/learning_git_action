@@ -13,8 +13,5 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          actions: 
-            do_this:
-              label: Fix this
-              description: Let us fix that for you
-              identifier: fix_errors
+          path: toolz/link.md
+          message: 'banana'
