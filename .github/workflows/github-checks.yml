@@ -8,9 +8,11 @@ jobs:
   test_basic_success:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Link to toolz app
-        uses: actions/checkout@v1
+        uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: toolz
+          input: ./toolz/link.md
           clean: true
