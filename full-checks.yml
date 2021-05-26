@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   # make sure the action works on a clean machines without building
-
+  
   ## Basic
   test_basic_success:
     runs-on: ubuntu-latest
