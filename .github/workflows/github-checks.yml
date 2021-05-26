@@ -10,9 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Link to toolz app
-        uses: yuzutech/annotations-action@v0.1.0
+        uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: toolz
-          input: ./toolz/link.md
-          clean: true
+          actions: 
+            do_this:
+              label: Fix this
+              description: Let us fix that for you
+              identifier: fix_errors
