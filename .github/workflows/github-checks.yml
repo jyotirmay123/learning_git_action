@@ -1,17 +1,29 @@
-name: "github-checks"
-on: [push]
+name: Example Workflow
+
+on: [pull_request]
 
 jobs:
-  # make sure the action works on a clean machines without building
-
-  ## Basic
-  test_basic_success:
+  checks:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Link to toolz app
-        uses: ./
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: toolz/link.md
-          message: 'banana'
+    - name: Annotate Checks
+      uses: agyemanjp/ci-checks-action@2.0.3
+      with:
+        ghToken: ${{ secrets.GITHUB_TOKEN }}
+        checks: '[
+            {
+              "name": "lint",
+              "fileName": ".lint-report.json",
+              "prChangesOnly": true
+            },
+            {
+              "name": "test",
+              "fileName": ".test-report.json",
+              "prChangesOnly": false
+            }
+          ]'
