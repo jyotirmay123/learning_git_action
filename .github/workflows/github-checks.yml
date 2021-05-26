@@ -12,6 +12,4 @@ jobs:
         uses: actions/checkout@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: Link to Data-Science Toolz
-          conclusion: success
-          action_url: https://toolz.7learnings.com
+          path: ./link.md
