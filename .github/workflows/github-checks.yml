@@ -12,18 +12,9 @@ jobs:
 
     steps:
     - name: Annotate Checks
-      uses: agyemanjp/ci-checks-action@2.0.3
+      uses: actions/checkout@v2
       with:
-        ghToken: ${{ secrets.GITHUB_TOKEN }}
-        checks: '[
-            {
-              "name": "lint",
-              "fileName": ".lint-report.json",
-              "prChangesOnly": true
-            },
-            {
-              "name": "test",
-              "fileName": ".test-report.json",
-              "prChangesOnly": false
-            }
-          ]'
+        token: ${{ secrets.GITHUB_TOKEN }}
+      run: >-
+        curl -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/octocat/hello-world/check-runs/42/annotations
