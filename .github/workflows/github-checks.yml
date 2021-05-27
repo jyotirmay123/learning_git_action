@@ -20,4 +20,4 @@ jobs:
       run: >-
         curl \
         -H "Accept: application/vnd.github.v3+json" \
-        https://api.github.com/repos/octocat/hello-world/check-suites/42/check-runs
+        https://api.github.com/repos/jyotirmay123/repo/check-suites/880410870/check-runs
