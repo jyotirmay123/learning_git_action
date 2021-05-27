@@ -18,7 +18,12 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Annotate Checks
-      run: >-
-        curl \
-        -H "Accept: application/vnd.github.v3+json" \
-        https://api.github.com/repos/jyotirmay123/learning_git_action/check-suites/880410870/check-runs
+      uses: octokit/request-action@v2.x
+      id: create_check_suite
+      with:
+        route: POST /repos/{owner}/{repo}/check-runs
+        owner: jyotirmay123
+        repo: learning_git_action
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: "echo checks-suite output: ${{ steps.create_check_suite.outputs.data }}"
