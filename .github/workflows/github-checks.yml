@@ -11,8 +11,12 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - name: Annotate Checks
+    - name: Check out repository
       uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Annotate Checks
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
       run: >-
