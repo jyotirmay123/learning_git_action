@@ -16,7 +16,7 @@ jobs:
       id: checkoutrepo
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-
+    - run: "echo ${{github}}"
     - name: Annotate Checks
       uses: octokit/request-action@v2.x
       id: create_check_suite
