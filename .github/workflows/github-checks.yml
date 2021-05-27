@@ -13,6 +13,7 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
+      id: checkoutrepo
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -20,4 +21,4 @@ jobs:
       run: >-
         curl \
         -H "Accept: application/vnd.github.v3+json" \
-        https://api.github.com/repos/jyotirmay123/repo/check-suites/880410870/check-runs
+        https://api.github.com/repos/jyotirmay123/learning_git_action/check-suites/880410870/check-runs
