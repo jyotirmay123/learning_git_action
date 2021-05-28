@@ -17,7 +17,7 @@ jobs:
         run: echo ${GIT_ENV}
       #- run: echo ${{ toJSON(context) }}
 
-      # https://github.com/octokit/request-action#usage
+      # https://github.com/octokit/request-action#usage b
       - name: Link to toolz
         uses: octokit/request-action@v2.x
         id: create_check_suite
