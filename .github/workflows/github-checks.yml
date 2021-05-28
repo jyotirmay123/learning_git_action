@@ -49,11 +49,9 @@ jobs:
         #   full_repo: ${{ github.repository }}
         #   run_id: ${{ github.run_id }}
         # run: echo "$STEPS_CONTXT"
-        run: >-
-          curl --fail --silent --show-error
-          -H "Accept: application/vnd.github.v3+json" 
-          $(curl --fail --silent --show-error
-          -H "Accept: application/vnd.github.v3+json"
+        run: |
+          export CHECK_SUITE_URL=$(curl --fail --silent --show-error\
+          -H "Accept: application/vnd.github.v3+json"\
           "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" | jq ".check_suite_url")
 
         # curl --fail --silent --show-error
