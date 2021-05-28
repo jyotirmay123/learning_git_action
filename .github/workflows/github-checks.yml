@@ -15,8 +15,7 @@ jobs:
       - name: Dump git and context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-          CONTEXT_CONTEXT: ${{ toJson(context) }}
-        run: echo "$GITHUB_CONTEXT" && echo "$CONTEXT_CONTEXT"
+        run: echo "$GITHUB_CONTEXT"
 
       # https://github.com/octokit/request-action#usage b
       - name: Link to toolz
