@@ -27,9 +27,10 @@ jobs:
           GITHUB_REPO:  §{{ toJSON(github.event.repository.name) }}
           GIT_REPO:     §{{ toJSON(github.repository) }}
         with:
-          route: POST "/repos/$GIT_REPO/check-runs"
+          route: POST /repos/{full_repo}/check-runs
           owner: $GITHUB_OWNER
           repo: §GITHUB_REPO
+          full_repo: ${{ github.repository }}
           name: "Test check run"
           head_sha: ${{ github.sha }}
           output: | # The | is significant!
