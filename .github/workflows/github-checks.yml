@@ -12,24 +12,49 @@ jobs:
 
 # https://github.com/octokit/request-action
     steps:
-      - name: ttt
-        id: toolz
+      - name: Dump GitHub context
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          steps: ${{ fromJSON(context.steps) }}
-        run: echo $step
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
 
-      - name: Data-Science Toolz Link
-        uses: octokit/request-action@v2.x
-        id: toolz_check_suite
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
-          full_repo: ${{ github.repository }}
-          check_run_id: ${{ fromJson(context.steps.toolz.outputs.data).id }}
-          name: "Toolz"
-          head_sha: ${{ github.sha }}
-          output: |
-            title: Data-Science Toolz Application
-            summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
+      # - name: ttt
+      #   id: toolz
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     steps: ${{ fromJSON(context.steps) }}
+      #   run: echo $step
+
+      # - name: Data-Science Toolz Link
+      #   uses: octokit/request-action@v2.x
+      #   id: toolz_check_suite
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
+      #     full_repo: ${{ github.repository }}
+      #     check_run_id: ${{ fromJson(context.steps.toolz.outputs.data).id }}
+      #     name: "Toolz"
+      #     head_sha: ${{ github.sha }}
+      #     output: |
+      #       title: Data-Science Toolz Application
+      #       summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
