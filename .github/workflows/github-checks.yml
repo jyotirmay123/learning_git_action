@@ -12,10 +12,11 @@ jobs:
 
 # https://github.com/octokit/request-action
     steps:
-      - env:
-          GIT_ENV: $ {{ toJSON(github) }}
-        run: echo ${GIT_ENV}
-      #- run: echo ${{ toJSON(context) }}
+      - name: Dump git and context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          CONTEXT_CONTEXT: ${{ toJson(context) }}
+        run: echo "$GITHUB_CONTEXT" && echo "$CONTEXT_CONTEXT"
 
       # https://github.com/octokit/request-action#usage b
       - name: Link to toolz
