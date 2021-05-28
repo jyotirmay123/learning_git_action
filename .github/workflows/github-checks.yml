@@ -56,7 +56,7 @@ jobs:
         with:
           route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
           full_repo: ${{ github.repository }}
-          check_run_id: ${{ GITHUB_CONTEXT.run_id }}
+          check_run_id: ${{ github.run_id }}
           name: "Toolz"
           head_sha: ${{ github.sha }}
           output: |
