@@ -12,29 +12,23 @@ jobs:
 
 # https://github.com/octokit/request-action
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-      id: checkoutrepo
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-    - run: "echo ${{github}}"
-    - name: Annotate Checks
-      uses: octokit/request-action@v2.x
-      id: create_check_suite
-      with:
-        route: POST /repos/{owner}/{repo}/check-runs
-        owner: jyotirmay123
-        repo: learning_git_action
-        name: "Test check run"
-        head_sha: ${{ github.sha }}
-        output: | # The | is significant!
-          title: Test check run title
-          summary: A summary of the test check run. More here https://toolz.7learnings.com or [here](https://toolz.7learnings.com)
-          action_url:
-              url: https://toolz.7learnings.com
-          images:
-            - alt: Test image
-              image_url: https://jyotirmays.com/img/portfolio/quicknat.jpg
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: "echo checks-suite output: ${{ steps.create_check_suite.outputs.data }}"
+      - env:
+          GIT_ENV: $ {{ toJSON(github) }}
+        run: echo ${GIT_ENV}
+      #- run: echo ${{ toJSON(context) }}
+
+      # https://github.com/octokit/request-action#usage
+      - name: Link to toolz
+        uses: octokit/request-action@v2.x
+        id: create_check_suite
+        with:
+          route: POST /repos/{owner}/{repo}/check-runs
+          owner: context.repo.owner
+          repo: context.repo.repo
+          name: "Test check run"
+          head_sha: ${{ github.sha }}
+          output: | # The | is significant!
+            title: Data-Science Toolz Application
+            summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
