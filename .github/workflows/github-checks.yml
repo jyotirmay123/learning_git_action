@@ -12,6 +12,13 @@ jobs:
 
 # https://github.com/octokit/request-action
     steps:
+
+      - name: ttt
+        id: toolz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          steps: ${{ fromJSON(steps) }}
+        run: echo "$step"
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
@@ -36,13 +43,6 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-
-      # - name: ttt
-      #   id: toolz
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     steps: ${{ fromJSON(context.steps) }}
-      #   run: echo $step
 
       # - name: Data-Science Toolz Link
       #   uses: octokit/request-action@v2.x
