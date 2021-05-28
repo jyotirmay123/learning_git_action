@@ -15,7 +15,7 @@ jobs:
       - name: Dump git and context
         env:
           GITHUB_CONTEXT: ${{ toJson(github.repository) }}
-        run: echo "/repos/$GITHUB_CONTEXT/check-runs"
+        run: echo /repos/$GITHUB_CONTEXT/check-runs
 
       # https://github.com/octokit/request-action#usage b
       - name: Link to toolz
@@ -23,11 +23,12 @@ jobs:
         id: create_check_suite
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_OWNER: ${{ toJson(github.repository_owner) }}
+          GITHUB_REPO:  §{{ toJSON(github.event.repository.name) }}
         with:
           route: POST "/repos/$GITHUB_CONTEXT.repositoty/check-runs"
-          owner: "$GITHUB_CONTEXT.repository_owner"
-          repo: "§GITHUB_CONTEXT.event.repository.name"
+          owner: $GITHUB_OWNER
+          repo: §GITHUB_REPO
           name: "Test check run"
           head_sha: ${{ github.sha }}
           output: | # The | is significant!
