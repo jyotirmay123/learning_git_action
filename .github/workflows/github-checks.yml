@@ -43,14 +43,14 @@ jobs:
       - name: ttt
         id: toolz
         # uses: octokit/request-action@v2.x
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          STEPS_CONTXT: ${{ toJSON(steps) }}
-          full_repo: ${{ github.repository }}
-          run_id: ${{ github.run_id }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   STEPS_CONTXT: ${{ toJSON(steps) }}
+        #   full_repo: ${{ github.repository }}
+        #   run_id: ${{ github.run_id }}
         # run: echo "$STEPS_CONTXT"
         run: >-
-          curl --fail --silent --show-error \
+          curl \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         # with:
