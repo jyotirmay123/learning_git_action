@@ -55,6 +55,7 @@ jobs:
           "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" | jq ".check_suite_url")
           CHECK_SUITE_RUN_URL="${CHECK_SUITE_URL}/check-runs"
           echo "CHECK_SUITE_RUN_URL=$CHECK_SUITE_RUN_URL" >> $GITHUB_ENV
+          echo $CHECK_SUITE_RUN_URL
           echo ${{ env.CHECK_SUITE_RUN_URL }}
 
         # curl --fail --silent --show-error
