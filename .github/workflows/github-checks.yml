@@ -42,10 +42,25 @@ jobs:
 
       - name: ttt
         id: toolz
+        uses: octokit/request-action@v2.x
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           STEPS_CONTXT: ${{ toJSON(steps) }}
-        run: echo "$STEPS_CONTXT"
+          full_repo: ${{ github.repository }}
+          run_id: ${{ github.run_id }}
+        # run: echo "$STEPS_CONTXT"
+        run: >-
+          curl --fail --silent --show-error \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        # with:
+        #   route: GET /repos/{full_repo}/actions/runs/{run_id}
+        #   full_repo: ${{ github.repository }}
+        #   run_id: ${{ github.run_id }}
+        #   name: "Toolz"
+        #   head_sha: ${{ github.sha }}
+        #   output: |
+
 
       - name: Data-Science Toolz Link
         uses: octokit/request-action@v2.x

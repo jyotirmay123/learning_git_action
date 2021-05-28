@@ -1,0 +1,332 @@
+# ==============================================================================
+# DO NOT MODIFY, this file is auto-generated, adjust
+# ./scripts/generate_gh_action_workflows.sh instead.
+# ------------------------------------------------------------------------------
+name: ML Pipeline (arnsberg-01)
+
+on:
+  schedule: [{cron: '45 5 * * *'}]
+  pull_request: { branches: [master], paths: ["arnsberg-01/cfg.yml","arnsberg-01/queries/**",".github/workflows/arnsberg-01-ml-pipeline.yml","core/**","pipeline/*.py","common/models/**","requirements-*.txt","constraints.txt"] }
+  issue_comment:
+    types: [created]
+
+env:
+  PROJECT: arnsberg-01
+
+jobs:
+  cancel:
+    if: github.event_name != 'issue_comment' || startsWith(github.event.comment.body, '/pipeline arnsberg-01')
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Cancel existing runs for this pull request/branch
+        uses: styfle/cancel-workflow-action@0.5.0
+        if: github.ref != 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
+        with:
+          access_token: ${{ github.token }}
+
+  run:
+    if: github.event_name != 'issue_comment' || startsWith(github.event.comment.body, '/pipeline arnsberg-01')
+    runs-on: self-hosted
+    steps:
+      - name: pingback comment for triggered run
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            return github.issues.updateComment({
+              comment_id: ${{ github.event.comment.id }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body:
+                // escape string body by encoding it as JSON
+                ${{ toJSON(github.event.comment.body) }} + "\n" +
+                "run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...",
+            })
+
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: venv
+          # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/caching-dependencies-to-speed-up-workflows
+          key:
+            base-env-${{ hashFiles('**/requirements*.txt', 'constraints.txt', 'common/setup.py') }}-3
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: make base-env
+
+      - name: Environment info
+        run: >-
+          . venv/bin/activate &&
+          python --version &&
+          pip list
+
+      - name: Set default flag values
+        run: |
+          echo "DATA_IMPORT_FLAG=true" >> $GITHUB_ENV
+
+      - name: RUN_ID for pull-request run
+        if: github.event_name == 'pull_request'
+        run: |
+          HEAD_SHA='${{ github.event.pull_request.head.sha }}'
+          RUN_ID="pr${{ github.event.number }}_${HEAD_SHA::7}"
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          echo "RUN_ENV=dev" >> $GITHUB_ENV
+          echo 'MAX_DATE=infer' >> $GITHUB_ENV
+      - name: RUN_ID for scheduled run
+        if: github.event_name == 'schedule'
+        run: |
+          RUN_ID=$(date +%Y%m%d)
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          echo "RUN_ENV=production" >> $GITHUB_ENV
+          echo "MAX_DATE=$(date --iso-8601)" >> $GITHUB_ENV
+      - name: RUN_ID for manually triggered run
+        if: github.event_name == 'issue_comment'
+        run: |
+          # /pipeline arnsberg-01 date {--skip-data-import}
+          CMD=(${{ github.event.comment.body }})
+          RUN_ID=$(date -d ${CMD[2]} +%Y%m%d)
+          MAX_DATE=$(date -d ${CMD[2]} --iso-8601)
+          DATA_IMPORT_FLAG=${{ !contains(github.event.comment.body, '--skip-data-import') }}
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          echo 'RUN_ENV=production' >> $GITHUB_ENV
+          echo "MAX_DATE=$MAX_DATE" >> $GITHUB_ENV
+          echo "DATA_IMPORT_FLAG=$DATA_IMPORT_FLAG" >> $GITHUB_ENV
+
+      - name: Setup Google Service Account
+        run: |
+          base64 --decode <<< $GCLOUD_AUTH > "$GITHUB_WORKSPACE/gcloud_auth.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/gcloud_auth.json" >> $GITHUB_ENV
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH_ML_PIPELINE_ARNSBERG_01_7L }}
+
+
+
+      # https://github.com/octokit/request-action#usage
+      # https://github.community/t/getting-the-run-id-of-a-run-in-github-actions/16726/24
+      - name: ttt
+        id: toolz
+        env:
+          STEPS_CONTXT: ${{ toJSON(steps) }}
+        run: echo $STEPS_CONTXT
+
+      - name: Data-Science Toolz Link
+        uses: octokit/request-action@v2.x
+        id: toolz_check_suite
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
+          full_repo: ${{ github.repository }}
+          check_run_id: ${{ toJSON(steps.toolz.outputs.data).id }}
+          name: "Toolz"
+          head_sha: ${{ github.sha }}
+          output: |
+            title: Data-Science Toolz Application
+            summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
+
+
+
+
+      - name: (Optionally) Seed Data
+        run: |-
+          if [ -d ${{ env.PROJECT }}/queries/seed ]; then
+            . venv/bin/activate
+            python3 -m pipeline \
+              --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }} \
+              --max-date=${{ env.MAX_DATE }} dbt -- run --models seed
+          fi
+
+      - name: Run Data Import
+        if: ${{ env.RUN_ENV == 'production' && env.DATA_IMPORT_FLAG == 'true' }}
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline load-data
+          --project=${{ env.PROJECT }} --env=upload --run-identifier=
+          --max-date=${{ env.MAX_DATE }} --verbose
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_ARNSBERG_01_7L }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_ARNSBERG_01_7L }}
+          HTTP_AUTH: ${{ secrets.HTTP_AUTH_ARNSBERG_01_7L }}
+
+      - name: Test upload freshness for production
+        if: env.RUN_ENV == 'production'
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --verbose
+          dbt -- source snapshot-freshness
+
+
+      - name: Upload failed data import file
+        uses: actions/upload-artifact@v2
+        if: env.RUN_ENV == 'production' && failure()
+        with:
+          name: data-import
+          path: tmp/${{ env.PROJECT }}/load-data
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Deploy BigQuery functions fx
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }}
+          dbt -- run-operation fx_FUNCTIONS
+
+      - name: Test 'upload' tables before building 'data' tables...
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- test --models 'source:*' upload --exclude forecast datastudio
+
+      - name: Test and build 'data' abstraction layer (production)
+        if: env.RUN_ENV == 'production'
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=dev --run-identifier=prod_trial_run_${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- run --models data
+          &&
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=dev --run-identifier=prod_trial_run_${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- test --models data --exclude forecast datastudio
+          &&
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- run --models data
+
+      - name: Build 'data' abstraction layer (dev)
+        if: env.RUN_ENV == 'dev'
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- run --models data
+          &&
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- test --models data --exclude forecast datastudio
+
+      - name: Run ML Pipeline
+        # TODO: only rebuild data abstraction tables when the abstraction changed
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --sync-to-remote-working-dir --verbose
+          --model all --refresh-data
+          get-data train-model deploy-model forecast plot
+          &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- run --models datastudio
+          &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }}
+          --max-date=${{ env.MAX_DATE }} --refresh-data
+          dbt -- test --models datastudio forecast
+
+      - name: Update backend (forecast, filter options, cfg.yml)
+        run: >-
+          . venv/bin/activate &&
+          ./scripts/refresh_backend.py ${{ env.PROJECT }} ${{ env.RUN_ENV }} ${{ env.RUN_ID }}
+
+      - name: Compare Forecasts
+        run: >-
+          . venv/bin/activate &&
+          python3 -m pipeline
+          --project=${{ env.PROJECT }} --env=${{ env.RUN_ENV }} --run-identifier=${{ env.RUN_ID }} compare-forecasts --verbose
+
+      - name: Post job failure to Slack
+        if: env.RUN_ENV == 'production' && failure()
+        run: >-
+          curl --fail --silent --show-error
+          --request POST
+          --header 'Content-Type: application/json'
+          --data "{\"text\": \"<https://github.com/7Learnings/repo/actions/runs/$GITHUB_RUN_ID|$GITHUB_WORKFLOW> run failed (event: $GITHUB_EVENT_NAME)\"}"
+          $SLACK_URL
+        env:
+          SLACK_URL: ${{ secrets.SLACK_ALERTS_URL }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: plots
+          path: tmp/${{ env.PROJECT }}/${{ env.RUN_ID }}/plots
+
+      - name: Extract dbt warnings log
+        if: always()
+        run: >-
+          grep --fixed-strings 'WARN ' ${{ env.PROJECT }}/logs/dbt.log >> tmp/warnings.log || true
+
+      - name: Upload log as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: log
+          path: tmp/warnings.log
+
+      - name: Post warning to Slack
+        if: env.RUN_ENV == 'production' && always()
+        env:
+          SLACK_PIPELINE_PLOT_TOKEN: ${{ secrets.SLACK_PIPELINE_PLOT_TOKEN }}
+          SLACK_CHANNEL: '#pharao24'
+        run: >-
+          curl --fail --silent --show-error
+          -F file=@tmp/warnings.log
+          -F "initial_comment=${{ env.PROJECT }} pipeline status ${{ job.status }} (https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          -F channels="${{ env.SLACK_CHANNEL }}"
+          -H "Authorization: Bearer ${{ env.SLACK_PIPELINE_PLOT_TOKEN }}"
+          https://slack.com/api/files.upload
+
+      - name: update pingback comment
+        if: github.event_name == 'issue_comment' && always()
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.updateComment({
+              comment_id: ${{ github.event.comment.id }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body:
+                // escape string body by encoding it as JSON
+                ${{ toJSON(github.event.comment.body) }} + "\n" +
+                "run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**.",
+            })
+
+      # https://github.com/octokit/request-action#usage
+      # - id: toolz
+      # - name: Data-Science Toolz Link
+      #   uses: octokit/request-action@v2.x
+      #   id: toolz_check_suite
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
+      #     full_repo: ${{ github.repository }}
+      #     check_run_id: ${{ fromJson(steps.toolz.outputs.data).id }}
+      #     name: "Toolz"
+      #     head_sha: ${{ github.sha }}
+      #     output: |
+      #       title: Data-Science Toolz Application
+      #       summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
