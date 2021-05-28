@@ -81,17 +81,23 @@ jobs:
 
 
       - name: Data-Science Toolz Link
-        uses: octokit/request-action@v2.x
+        # uses: octokit/request-action@v2.x
         id: toolz_check_suite
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_CONTEXT: ${{ toJSON(github) }}
-        with:
-          route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
-          full_repo: ${{ github.repository }}
-          check_run_id: ${{ env.CHECK_SUITE_LAST_RUN_ID }}
-          name: "Toolz"
-          head_sha: ${{ github.sha }}
-          output: |
-            title: Data-Science Toolz Application
-            summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
+        run: |
+          curl \
+          -X PATCH \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/check-runs/${{ env.CHECK_SUITE_LAST_RUN_ID }} \
+          -d '{"name":"HALLOOOOOOOO"}'
+        # with:
+        #   route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
+        #   full_repo: ${{ github.repository }}
+        #   check_run_id: ${{ env.CHECK_SUITE_LAST_RUN_ID }}
+        #   name: "Toolz"
+        #   head_sha: ${{ github.sha }}
+        #   output: |
+        #     title: Data-Science Toolz Application
+        #     summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
