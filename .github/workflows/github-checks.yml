@@ -25,8 +25,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_OWNER: ${{ toJson(github.repository_owner) }}
           GITHUB_REPO:  §{{ toJSON(github.event.repository.name) }}
+          GIT_REPO:     §{{ toJSON(github.repository) }}
         with:
-          route: POST "/repos/$GITHUB_CONTEXT.repositoty/check-runs"
+          route: POST "/repos/$GIT_REPO/check-runs"
           owner: $GITHUB_OWNER
           repo: §GITHUB_REPO
           name: "Test check run"
