@@ -23,8 +23,8 @@ jobs:
         id: create_check_suite
         with:
           route: POST /repos/{owner}/{repo}/check-runs
-          owner: context.repo.owner
-          repo: context.repo.repo
+          owner: $ {{ github.repository_owner }}
+          repo: $ {{ github.event.repository.name }}
           name: "Test check run"
           head_sha: ${{ github.sha }}
           output: | # The | is significant!
