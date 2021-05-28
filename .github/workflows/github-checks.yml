@@ -14,10 +14,12 @@ jobs:
     steps:
 
       - name: Dump GitHub context
+        id: a
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
         run: echo "$GITHUB_CONTEXT"
       - name: Dump job context
+        id: b
         env:
           JOB_CONTEXT: ${{ toJSON(job) }}
         run: echo "$JOB_CONTEXT"
