@@ -39,23 +39,26 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
+
       - name: ttt
         id: toolz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           STEPS_CONTXT: ${{ toJSON(steps) }}
         run: echo "$STEPS_CONTXT"
-      # - name: Data-Science Toolz Link
-      #   uses: octokit/request-action@v2.x
-      #   id: toolz_check_suite
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
-      #     full_repo: ${{ github.repository }}
-      #     check_run_id: ${{ fromJson(context.steps.toolz.outputs.data).id }}
-      #     name: "Toolz"
-      #     head_sha: ${{ github.sha }}
-      #     output: |
-      #       title: Data-Science Toolz Application
-      #       summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
+
+      - name: Data-Science Toolz Link
+        uses: octokit/request-action@v2.x
+        id: toolz_check_suite
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        with:
+          route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
+          full_repo: ${{ github.repository }}
+          check_run_id: ${{ GITHUB_CONTEXT.run_id }}
+          name: "Toolz"
+          head_sha: ${{ github.sha }}
+          output: |
+            title: Data-Science Toolz Application
+            summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?module=compare_forecasts&run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
