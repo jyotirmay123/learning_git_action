@@ -42,7 +42,7 @@ jobs:
 
       - name: ttt
         id: toolz
-        uses: octokit/request-action@v2.x
+        # uses: octokit/request-action@v2.x
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           STEPS_CONTXT: ${{ toJSON(steps) }}
