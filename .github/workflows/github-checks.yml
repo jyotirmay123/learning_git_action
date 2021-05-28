@@ -17,8 +17,8 @@ jobs:
         id: toolz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          steps: ${{ fromJSON(steps) }}
-        run: echo "$step"
+          STEPS_CONTXT: ${{ toJSON(steps) }}
+        run: echo "STEPS_CONTXT"
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
