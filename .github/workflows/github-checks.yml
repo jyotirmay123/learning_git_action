@@ -15,20 +15,22 @@ jobs:
       - name: Dump git and context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+        run: echo "/repos/$GITHUB_CONTEXT.repositoty/check-runs"
 
       # https://github.com/octokit/request-action#usage b
       - name: Link to toolz
         uses: octokit/request-action@v2.x
         id: create_check_suite
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         with:
-          route: POST /repos/{owner}/{repo}/check-runs
-          owner: $ {{ github.repository_owner }}
-          repo: $ {{ github.event.repository.name }}
+          route: POST "/repos/$GITHUB_CONTEXT.repositoty/check-runs"
+          owner: "$GITHUB_CONTEXT.repository_owner"
+          repo: "§GITHUB_CONTEXT.event.repository.name"
           name: "Test check run"
           head_sha: ${{ github.sha }}
           output: | # The | is significant!
             title: Data-Science Toolz Application
             summary: A link to the toolz- https://toolz.7learnings.com/streamlit/?run_identifier=${{ env.RUN_ID }}&project=${{ env.PROJECT }}
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            
