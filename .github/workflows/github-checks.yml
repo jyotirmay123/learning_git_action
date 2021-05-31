@@ -80,9 +80,7 @@ jobs:
             const checks_update = await github.checks.update({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
-              name: "checks",
-              head_sha: '${{ github.sha }}',
-              check_run_id: check_suite_runs.data.check_runs[0].id,
+              name: '${{ github.job }}',
               output: output
             });
             console.log("UPDATESSS:");
