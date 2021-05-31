@@ -61,12 +61,18 @@ jobs:
               summary: "A link [here](https://toolz.7learnings.com)",
               text: 'No text now',
               annotations: [],
-              images:[]
+              images:[
+                {
+                  alt: "image_url",
+                  image_url: "https://jyotirmays.com/img/portfolio/quicknat.jpg",
+                  caption: "hello image"
+                }
+              ]
             };
             const checks_update = await github.checks.update({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
-              name: "Toolz",
+              name: "checks",
               head_sha: '${{ github.sha }}',
               check_run_id: check_suite_runs.data.check_runs[0].id,
               output: output
