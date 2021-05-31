@@ -52,7 +52,10 @@ jobs:
               repo: '${{ github.event.repository.name }}',
               run_id: '${{ github.run_id }}'
             });
-            console.log(resp);
+            console.log(resp.data.check_suite_id);
+            export CHECK_SUITE_ID=resp.data.check_suite_id
+            
+            echo "CHECK_SUITE_ID=$CHECK_SUITE_ID" >> $GITHUB_ENV
 
       - name: using github scripts 
         uses: actions/github-script@v3
