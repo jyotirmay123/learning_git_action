@@ -61,11 +61,19 @@ jobs:
             console.log(check_suite_runs.data.check_runs[0].id);
             let checkrid = check_suite_runs.data.check_runs[0].id;
             console.log(checkrid);
+            let output = {
+              title: "Hello World",
+              summary: "A link [here](https://toolz.7learnings.com)",
+              text: 'No text now',
+              annotations: [],
+              images:[]
+            };
+            console.log(output);
             const checks_update = await github.checks.update({
-              '${{ github.repository_owner }}',
-              '${{ github.event.repository.name }}',
+              ${{ github.repository_owner }},
+              ${{ github.event.repository.name }},
               checkrid,
-              "A link [here](https://toolz.7learnings.com)"
+              output
             });
             console.log(checks_update);
 
