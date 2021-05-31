@@ -40,17 +40,31 @@ jobs:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
+
       - name: using github scripts 
         uses: actions/github-script@v3
         with:
           debug: true
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.actions.getJobForWorkflowRun({
+            github..checks.listForRef({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
-              job_id: ${{ github.run_id }}
+              ref: '${{ github.ref }}',
+              check_name: 'run'
             });
+
+      # - name: using github scripts 
+      #   uses: actions/github-script@v3
+      #   with:
+      #     debug: true
+      #     github-token: ${{secrets.GITHUB_TOKEN}}
+      #     script: |
+      #       github.actions.getJobForWorkflowRun({
+      #         owner: '${{ github.repository_owner }}',
+      #         repo: '${{ github.event.repository.name }}',
+      #         job_id: ${{ github.run_id }}
+      #       });
       - name: ttt
         id: toolz
         # uses: octokit/request-action@v2.x
