@@ -41,6 +41,19 @@ jobs:
         run: echo "$MATRIX_CONTEXT"
 
 
+      - name: Get a workflow run 
+        uses: actions/github-script@v3
+        with:
+          debug: true
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const resp = await github.actions.getWorkflowRun({
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              run_id: '${{ github.run_id }}'
+            });
+            console.log(resp);
+
       - name: using github scripts 
         uses: actions/github-script@v3
         with:
