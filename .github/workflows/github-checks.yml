@@ -72,7 +72,7 @@ jobs:
             const checks_update = await github.checks.update({
               '${{ github.repository_owner }}',
               '${{ github.event.repository.name }}',
-              checkrid,
+              123,
               output.summary
             });
             console.log(checks_update);
