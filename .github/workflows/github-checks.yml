@@ -40,6 +40,16 @@ jobs:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
+      - name: using github scripts 
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.actions..getJobForWorkflowRun({
+              jyotirmay123,
+              learning_git_action,
+              ${{ github.run_id }},
+            });
       - name: ttt
         id: toolz
         # uses: octokit/request-action@v2.x
