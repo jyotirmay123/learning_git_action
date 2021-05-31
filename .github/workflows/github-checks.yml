@@ -69,35 +69,35 @@ jobs:
               images:[]
             };
             console.log(output);
-          # const checks_update = await github.checks.update({
-          #   '${{ github.repository_owner }}',
-          #   '${{ github.event.repository.name }}',
-          #   123,
-          #   output.summary
-          # });
-          # console.log(checks_update);
-
-
-      - name: using github scripts 
-        uses: actions/github-script@v3
-        with:
-          debug: true
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            let output = {
-              title: 'Hello World',
-              summary: 'A link here',
-              text: 'No text now',
-              annotations: [],
-              images:[]
-            };
-            console.log(output);
-            github.checks.update({
+            const checks_update = await github.checks.update({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
-              check_run_id: 2709533692,
-              "output.summary": 'A link here',
-            }).then(data=>console.log(data)).catch(err=>console.log(err));
+              check_run_id: check_suite_runs.data.check_runs[0].id,
+              "output.summary": "A link [here](https://toolz.7learnings.com)"
+            });
+            console.log(checks_update);
+
+
+      # - name: using github scripts 
+      #   uses: actions/github-script@v3
+      #   with:
+      #     debug: true
+      #     github-token: ${{secrets.GITHUB_TOKEN}}
+      #     script: |
+      #       let output = {
+      #         title: 'Hello World',
+      #         summary: 'A link here',
+      #         text: 'No text now',
+      #         annotations: [],
+      #         images:[]
+      #       };
+      #       console.log(output);
+      #       github.checks.update({
+      #         owner: '${{ github.repository_owner }}',
+      #         repo: '${{ github.event.repository.name }}',
+      #         check_run_id: 2709533692,
+      #         "output.summary": 'A link here',
+      #       }).then(data=>console.log(data)).catch(err=>console.log(err));
           # console.log(checks_update);
 
       # - name: using github scripts 
@@ -111,24 +111,24 @@ jobs:
       #         repo: '${{ github.event.repository.name }}',
       #         job_id: ${{ github.run_id }}
       #       });
-      - name: ttt
-        id: toolz
-        # uses: octokit/request-action@v2.x
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #   STEPS_CONTXT: ${{ toJSON(steps) }}
-        #   full_repo: ${{ github.repository }}
-        #   run_id: ${{ github.run_id }}
-        # run: echo "$STEPS_CONTXT"
-        run: |
-          export CHECK_SUITE_ID=$(curl --fail --silent --show-error \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" | jq ".check_suite_id") 
-          export CHECK_SUITE_LAST_RUN_ID=$(curl --fail --silent --show-error \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/${{ github.repository }}/check-suites/${CHECK_SUITE_ID}/check-runs" | jq ".check_runs[-1].id")
-          echo $CHECK_SUITE_LAST_RUN_ID
-          echo "CHECK_SUITE_LAST_RUN_ID=$CHECK_SUITE_LAST_RUN_ID" >> $GITHUB_ENV
+      # - name: ttt
+      #   id: toolz
+      #   # uses: octokit/request-action@v2.x
+      #   # env:
+      #   #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   #   STEPS_CONTXT: ${{ toJSON(steps) }}
+      #   #   full_repo: ${{ github.repository }}
+      #   #   run_id: ${{ github.run_id }}
+      #   # run: echo "$STEPS_CONTXT"
+      #   run: |
+      #     export CHECK_SUITE_ID=$(curl --fail --silent --show-error \
+      #     -H "Accept: application/vnd.github.v3+json" \
+      #     "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" | jq ".check_suite_id") 
+      #     export CHECK_SUITE_LAST_RUN_ID=$(curl --fail --silent --show-error \
+      #     -H "Accept: application/vnd.github.v3+json" \
+      #     "https://api.github.com/repos/${{ github.repository }}/check-suites/${CHECK_SUITE_ID}/check-runs" | jq ".check_runs[-1].id")
+      #     echo $CHECK_SUITE_LAST_RUN_ID
+      #     echo "CHECK_SUITE_LAST_RUN_ID=$CHECK_SUITE_LAST_RUN_ID" >> $GITHUB_ENV
         
         
         # CHECK_SUITE_RUN_URL="${CHECK_SUITE_URL}/check-runs"
@@ -151,18 +151,18 @@ jobs:
         #   output: |
 
 
-      - name: Data-Science Toolz Link
-        # uses: octokit/request-action@v2.x
-        id: toolz_check_suite
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: |
-          curl \
-          -X PATCH \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${{ github.repository }}/check-runs/${{ env.CHECK_SUITE_LAST_RUN_ID }} \
-          -d '{"name":"HALLOOOOOOOO"}'
+      # - name: Data-Science Toolz Link
+      #   # uses: octokit/request-action@v2.x
+      #   id: toolz_check_suite
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     GITHUB_CONTEXT: ${{ toJSON(github) }}
+      #   run: |
+      #     curl \
+      #     -X PATCH \
+      #     -H "Accept: application/vnd.github.v3+json" \
+      #     https://api.github.com/repos/${{ github.repository }}/check-runs/${{ env.CHECK_SUITE_LAST_RUN_ID }} \
+      #     -d '{"name":"HALLOOOOOOOO"}'
         # with:
         #   route: PATCH /repos/{full_repo}/check-runs/{check_run_id}
         #   full_repo: ${{ github.repository }}
