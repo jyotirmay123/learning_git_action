@@ -1,4 +1,4 @@
-name: Example Workflow
+name: run
 
 on: [push, pull_request]
 
@@ -53,8 +53,13 @@ jobs:
               run_id: '${{ github.run_id }}'
             });
             console.log(resp.data.check_suite_id);
-            CHECK_SUITE_ID=resp.data.check_suite_id
-            echo "CHECK_SUITE_ID=$CHECK_SUITE_ID" >> $GITHUB_ENV
+            const check_suite_runs= await github.checks.listForSuite({
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              check_suite_id: resp.data.check_suite_id
+            });
+            console.log(check_suite_runs)
+
 
       - name: using github scripts 
         uses: actions/github-script@v3
@@ -62,7 +67,7 @@ jobs:
           debug: true
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const resp = await github.checks.listForRef({
+            const resp = await github.checks.listForSuite({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
               ref: '${{ github.ref }}',
