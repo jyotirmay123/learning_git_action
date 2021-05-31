@@ -52,7 +52,32 @@ jobs:
               repo: '${{ github.event.repository.name }}',
               ref: '${{ github.ref }}',
               check_name: 'run'
+            }).done((data)=>{
+              console.log(data);
             });
+
+      - name: Update Annotations 
+        uses: actions/github-script@v3
+        with:
+          debug: true
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.checks.update({
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              check_run_id,
+              output.summary,
+              output.annotations[].path,
+              output.annotations[].start_line,
+              output.annotations[].end_line,
+              output.annotations[].annotation_level,
+              output.annotations[].message,
+              output.images[].alt,
+              output.images[].image_url,
+              actions[].label,
+              actions[].description,
+              actions[].identifier
+            })
 
       # - name: using github scripts 
       #   uses: actions/github-script@v3
