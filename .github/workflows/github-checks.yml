@@ -47,7 +47,7 @@ jobs:
           debug: true
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github..checks.listForRef({
+            github.checks.listForRef({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
               ref: '${{ github.ref }}',
