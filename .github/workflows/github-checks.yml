@@ -47,14 +47,13 @@ jobs:
           debug: true
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.checks.listForRef({
+            const resp = await github.checks.listForRef({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
               ref: '${{ github.ref }}',
               check_name: 'run'
-            }).done((data)=>{
-              console.log(data);
             });
+            console.log(resp);
 
       - name: Update Annotations 
         uses: actions/github-script@v3
