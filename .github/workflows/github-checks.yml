@@ -84,36 +84,21 @@ jobs:
           debug: true
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const resp = await github.checks.listForSuite({
-              owner: '${{ github.repository_owner }}',
-              repo: '${{ github.event.repository.name }}',
-              ref: '${{ github.ref }}',
-              check_name: 'run'
+            let output = {
+              title: 'Hello World',
+              summary: 'A link here',
+              text: 'No text now',
+              annotations: [],
+              images:[]
+            };
+            console.log(output);
+            const checks_update = await github.checks.update({
+              '${{ github.repository_owner }}',
+              '${{ github.event.repository.name }}',
+              2709533692,
+              output.summary
             });
-            console.log(resp);
-
-      - name: Update Annotations 
-        uses: actions/github-script@v3
-        with:
-          debug: true
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.checks.update({
-              owner: '${{ github.repository_owner }}',
-              repo: '${{ github.event.repository.name }}',
-              check_run_id,
-              output.summary,
-              output.annotations[].path,
-              output.annotations[].start_line,
-              output.annotations[].end_line,
-              output.annotations[].annotation_level,
-              output.annotations[].message,
-              output.images[].alt,
-              output.images[].image_url,
-              actions[].label,
-              actions[].description,
-              actions[].identifier
-            })
+            console.log(checks_update);
 
       # - name: using github scripts 
       #   uses: actions/github-script@v3
