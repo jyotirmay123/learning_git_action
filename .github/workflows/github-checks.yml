@@ -46,9 +46,9 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.actions.getJobForWorkflowRun({
-              ${{ github.repository_owner }},
-              ${{ github.event.repository.name }},
-              ${{ github.run_id }}
+              owner: ${{ github.repository_owner }},
+              repo: ${{ github.event.repository.name }},
+              job_id: ${{ github.run_id }}
             });
       - name: ttt
         id: toolz
