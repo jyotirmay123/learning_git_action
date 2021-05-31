@@ -50,20 +50,7 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const resp = await github.actions.getWorkflowRun({
-              owner: '${{ github.repository_owner }}',
-              repo: '${{ github.event.repository.name }}',
-              run_id: '${{ github.run_id }}'
-            });
-            console.log("MAINNN:");
-            console.log(resp.data);
-            const check_suite_runs= await github.checks.listForSuite({
-              owner: '${{ github.repository_owner }}',
-              repo: '${{ github.event.repository.name }}',
-              check_suite_id: resp.data.check_suite_id
-            });
-            console.log("CHECK_SUITE_RUNNN:");
-            console.log(check_suite_runs.data);
+   
             let output = {
               title: "Hello World",
               summary: "A link [here](https://toolz.7learnings.com)",
