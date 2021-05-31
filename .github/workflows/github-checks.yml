@@ -41,6 +41,10 @@ jobs:
         run: echo "$MATRIX_CONTEXT"
 
 
+      - name: toolz
+        id: toolz
+        run: echo "Toolz"
+
       - name: Get a workflow run 
         uses: actions/github-script@v3
         with:
@@ -51,11 +55,13 @@ jobs:
               repo: '${{ github.event.repository.name }}',
               run_id: '${{ github.run_id }}'
             });
+            console.log(resp.data);
             const check_suite_runs= await github.checks.listForSuite({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
               check_suite_id: resp.data.check_suite_id
             });
+            console.log(check_suite_runs.data);
             let output = {
               title: "Hello World",
               summary: "A link [here](https://toolz.7learnings.com)",
@@ -72,12 +78,12 @@ jobs:
             const checks_update = await github.checks.update({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
-              name: "checks",
+              name: "toolz",
               head_sha: '${{ github.sha }}',
               check_run_id: check_suite_runs.data.check_runs[0].id,
               output: output
             });
-          # console.log(checks_update);
+            console.log(checks_update.data);
 
 
       # - name: using github scripts 
