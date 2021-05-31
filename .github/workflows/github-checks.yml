@@ -58,7 +58,13 @@ jobs:
               repo: '${{ github.event.repository.name }}',
               check_suite_id: resp.data.check_suite_id
             });
-            console.log(check_suite_runs)
+            console.log(check_suite_runs.data.check_runs[0].id)
+            const checks_update = github.checks.update({
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              check_run_id: check_suite_runs.data.check_runs[0].id,
+              output.summary: "A link [here](https://toolz.7learnings.com)"
+            })
 
 
       - name: using github scripts 
