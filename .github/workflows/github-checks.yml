@@ -43,11 +43,11 @@ jobs:
       - name: using github scripts 
         uses: actions/github-script@v3
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          # github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.actions..getJobForWorkflowRun({
-              jyotirmay123,
-              learning_git_action,
+              ${{ github.repository_owner }},
+              ${{ github.events.repository.name }},
               ${{ github.run_id }},
             });
       - name: ttt
