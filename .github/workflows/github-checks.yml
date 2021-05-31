@@ -73,7 +73,7 @@ jobs:
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
               check_run_id: check_suite_runs.data.check_runs[0].id,
-              "output.summary": "A link [here](https://toolz.7learnings.com)"
+              output: output
             });
             console.log(checks_update);
 
