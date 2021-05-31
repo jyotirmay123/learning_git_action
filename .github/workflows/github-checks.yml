@@ -73,7 +73,7 @@ jobs:
               '${{ github.repository_owner }}',
               '${{ github.event.repository.name }}',
               checkrid,
-              output
+              output.summary
             });
             console.log(checks_update);
 
