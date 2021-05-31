@@ -44,7 +44,7 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            github.actions..getJobForWorkflowRun({
+            github.actions.getJobForWorkflowRun({
               ${{ github.repository_owner }},
               ${{ github.event.repository.name }},
               ${{ github.run_id }},
