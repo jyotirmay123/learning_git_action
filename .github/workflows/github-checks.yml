@@ -70,8 +70,8 @@ jobs:
             };
             console.log(output);
             const checks_update = await github.checks.update({
-              ${{ github.repository_owner }},
-              ${{ github.event.repository.name }},
+              '${{ github.repository_owner }}',
+              '${{ github.event.repository.name }}',
               checkrid,
               output
             });
