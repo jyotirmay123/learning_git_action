@@ -92,13 +92,13 @@ jobs:
               images:[]
             };
             console.log(output);
-            const checks_update = await github.checks.update({
+            github.checks.update({
               '${{ github.repository_owner }}',
               '${{ github.event.repository.name }}',
               2709533692,
               output.summary
-            });
-            console.log(checks_update);
+            }).then(data=>console.log(data)).catch(err=>console.log(err));
+          # console.log(checks_update);
 
       # - name: using github scripts 
       #   uses: actions/github-script@v3
