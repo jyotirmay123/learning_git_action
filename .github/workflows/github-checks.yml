@@ -53,8 +53,7 @@ jobs:
               run_id: '${{ github.run_id }}'
             });
             console.log(resp.data.check_suite_id);
-            export CHECK_SUITE_ID=resp.data.check_suite_id
-            
+            CHECK_SUITE_ID=resp.data.check_suite_id
             echo "CHECK_SUITE_ID=$CHECK_SUITE_ID" >> $GITHUB_ENV
 
       - name: using github scripts 
