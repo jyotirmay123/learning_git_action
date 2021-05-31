@@ -72,6 +72,8 @@ jobs:
             const checks_update = await github.checks.update({
               owner: '${{ github.repository_owner }}',
               repo: '${{ github.event.repository.name }}',
+              name: "Toolz",
+              head_sha: '${{ github.sha }}',
               check_run_id: check_suite_runs.data.check_runs[0].id,
               output: output
             });
