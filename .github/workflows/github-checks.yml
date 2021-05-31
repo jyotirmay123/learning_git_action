@@ -62,10 +62,10 @@ jobs:
             let checkrid = check_suite_runs.data.check_runs[0].id;
             console.log(checkrid);
             const checks_update = await github.checks.update({
-              owner: '${{ github.repository_owner }}',
-              repo: '${{ github.event.repository.name }}',
-              check_run_id: checkrid,
-              output.summary: "A link [here](https://toolz.7learnings.com)"
+              '${{ github.repository_owner }}',
+              '${{ github.event.repository.name }}',
+              checkrid,
+              "A link [here](https://toolz.7learnings.com)"
             });
             console.log(checks_update);
 
