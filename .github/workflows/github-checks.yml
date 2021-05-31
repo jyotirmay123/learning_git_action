@@ -93,10 +93,10 @@ jobs:
             };
             console.log(output);
             github.checks.update({
-              '${{ github.repository_owner }}',
-              '${{ github.event.repository.name }}',
-              2709533692,
-              'A link here',
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.event.repository.name }}',
+              check_run_id: 2709533692,
+              "output.summary": 'A link here',
             }).then(data=>console.log(data)).catch(err=>console.log(err));
           # console.log(checks_update);
 
