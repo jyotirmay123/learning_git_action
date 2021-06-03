@@ -25,22 +25,6 @@ jobs:
               -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
             })
 
-      - name: pingback comment for triggered run
-        if: github.event_name == 'issue_comment'
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            return github.issues.updateComment({
-              comment_id: ${{ github.event.comment.id }},
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body:
-                // escape string body by encoding it as JSON
-                ${{ toJSON(github.event.comment.body) }} + "\n" +
-                "run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...",
-            })
-
 
       - name: update pingback comment
         if: github.event_name == 'issue_comment' && always()
