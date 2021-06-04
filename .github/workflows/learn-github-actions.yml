@@ -2,7 +2,7 @@ name: learn-github-actions
 on: 
   schedule: [{cron: '00 06 * * *'}]
   pull_request: { branches: [master, main] }
-  push: { branches: [master, main] }
+  push: { branches: [master, main, test_pr_comments] }
   issue_comment:
     types: [created]
 jobs:   
@@ -40,39 +40,39 @@ jobs:
       #     CTX_CONTEXT: ${{ toJSON(context) }}
       #   run: echo "$CTX_CONTEXT"
 
-      - name: Pingback Init
-        if: github.event_name == 'issue_comment' && always()
-        uses: actions/github-script@v3
-        id: pingback
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: json
-          script: |
-            return github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
-              -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
-            })
+      # - name: Pingback Init
+      #   if: github.event_name == 'issue_comment' && always()
+      #   uses: actions/github-script@v3
+      #   id: pingback
+      #   with:
+      #     github-token: ${{secrets.GITHUB_TOKEN}}
+      #     result-encoding: json
+      #     script: |
+      #       return github.issues.createComment({
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: "> [ ${{ github.event.comment.body }} ]( ${{ github.event.comment.html_url }} ) \n \n \
+      #         -- [ ${{ github.workflow }} ]( https://github.com/7Learnings/repo/actions/runs/${{github.run_id }} ) \n \n "
+      #       })
 
 
-      - name: update pingback comment
-        if: github.event_name == 'issue_comment' && always()
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.updateComment({
-              comment_id: ${{ github.event.comment.id }},
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body:
-                // escape string body by encoding it as JSON
-                ${{ toJSON(github.event.comment.body) }} + "\n" +
-                "ISSUE_COMMENT run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
-                "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
-            })
+      # - name: update pingback comment
+      #   if: github.event_name == 'issue_comment' && always()
+      #   uses: actions/github-script@v3
+      #   with:
+      #     github-token: ${{secrets.GITHUB_TOKEN}}
+      #     script: |
+      #       github.issues.updateComment({
+      #         comment_id: ${{ github.event.comment.id }},
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body:
+      #           // escape string body by encoding it as JSON
+      #           ${{ toJSON(github.event.comment.body) }} + "\n" +
+      #           "ISSUE_COMMENT run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
+      #           "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
+      #       })
 
       - name: PR comment
         if: github.event_name == 'pull_request' && always()
@@ -80,8 +80,8 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.updateComment({
-              comment_id: ${{ github.event.comment.id }},
+            github.pulls.createReviewComment({
+              pull_number: ${{ github.event.comment.id }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body:
