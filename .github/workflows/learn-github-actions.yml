@@ -35,10 +35,10 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-      - name: Dump context
-        env:
-          CTX_CONTEXT: ${{ toJSON(context) }}
-        run: echo "$CTX_CONTEXT"
+      # - name: Dump context
+      #   env:
+      #     CTX_CONTEXT: ${{ toJSON(context) }}
+      #   run: echo "$CTX_CONTEXT"
 
       - name: Pingback Init
         if: github.event_name == 'issue_comment' && always()
