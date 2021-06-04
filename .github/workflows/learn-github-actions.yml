@@ -70,7 +70,7 @@ jobs:
               body:
                 // escape string body by encoding it as JSON
                 ${{ toJSON(github.event.comment.body) }} + "\n" +
-                "run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
+                "ISSUE_COMMENT run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
                 "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
             })
 
@@ -87,7 +87,7 @@ jobs:
               body:
                 // escape string body by encoding it as JSON
                 ${{ toJSON(github.event.comment.body) }} + "\n" +
-                "run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
+                "PR run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
                 "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
             })
 
