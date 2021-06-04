@@ -9,6 +9,37 @@ jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        id: a
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        id: b
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+      - name: Dump context
+        env:
+          CTX_CONTEXT: ${{ toJSON(context) }}
+        run: echo "$CTX_CONTEXT"
+
       - name: Pingback Init
         if: github.event_name == 'issue_comment' && always()
         uses: actions/github-script@v3
@@ -28,6 +59,23 @@ jobs:
 
       - name: update pingback comment
         if: github.event_name == 'issue_comment' && always()
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.updateComment({
+              comment_id: ${{ github.event.comment.id }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body:
+                // escape string body by encoding it as JSON
+                ${{ toJSON(github.event.comment.body) }} + "\n" +
+                "run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
+                "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
+            })
+
+      - name: PR comment
+        if: github.event_name == 'pull_request' && always()
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
