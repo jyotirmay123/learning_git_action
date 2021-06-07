@@ -93,7 +93,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'hi'
+              body: "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
             })
 # github.pulls.createReviewComment({
 #   pull_number: ${{ github.event.number }},
