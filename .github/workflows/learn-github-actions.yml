@@ -96,24 +96,24 @@ jobs:
             });
             console.log(comments_list);
             const num_of_comments = comments_list.length;
-            if(num_of_comments == 0){
-              return github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: "from create Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
-              });
-            } else {
-              return github.issues.updateComment({
-                comment_id: ${{ comments_list[num_of_comments-1].id }},
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body:
-                  // escape string body by encoding it as JSON
-                  ${{ toJSON(comments_list[num_of_comments-1].body) }} + "\n" +
-                  "from update Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
-              });
-            }
+        # if(num_of_comments == 0){
+        #   return github.issues.createComment({
+        #     issue_number: context.issue.number,
+        #     owner: context.repo.owner,
+        #     repo: context.repo.repo,
+        #     body: "from create Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
+        #   });
+        # } else {
+        #   return github.issues.updateComment({
+        #     comment_id: ${{ comments_list[num_of_comments-1].id }},
+        #     owner: context.repo.owner,
+        #     repo: context.repo.repo,
+        #     body:
+        #       // escape string body by encoding it as JSON
+        #       ${{ toJSON(comments_list[num_of_comments-1].body) }} + "\n" +
+        #       "from update Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
+        #   });
+        # }
 # github.pulls.createReviewComment({
 #   pull_number: ${{ github.event.number }},
 #   owner: context.repo.owner,
