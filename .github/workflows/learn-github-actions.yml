@@ -1,7 +1,7 @@
 name: learn-github-actions
 on: 
   schedule: [{cron: '00 06 * * *'}]
-  pull_request: { branches: [master, main] }
+  pull_request: { branches: [master, main, test_pr_comments] }
   push: { branches: [master, main, test_pr_comments] }
   issue_comment:
     types: [created]
@@ -35,6 +35,13 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
+      - name: Create comment on PR
+        if: github.event_name == 'pull_request'
+        env:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          pull_id=${{ github.event.number }}
+          echo $pull_id
       # - name: Dump context
       #   env:
       #     CTX_CONTEXT: ${{ toJSON(context) }}
