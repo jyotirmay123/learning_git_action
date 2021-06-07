@@ -80,6 +80,8 @@ jobs:
       #           "ISSUE_COMMENT run [${{ github.workflow }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) started...**${{ job.status }}**." + "\n" +
       #           "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
       #       })
+      # // For multi-line comments, we need more configurational information: https://octokit.github.io/rest.js/v18#pulls-create-review-comment
+                # "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
 
       - name: PR comment
         if: github.event_name == 'pull_request'
@@ -92,7 +94,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body:
-                // For multi-line comments, we need more configurational information: https://octokit.github.io/rest.js/v18#pulls-create-review-comment
-                "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
+                'hi'
             })
 
