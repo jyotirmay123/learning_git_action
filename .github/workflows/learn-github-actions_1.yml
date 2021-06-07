@@ -95,7 +95,7 @@ jobs:
               repo: context.repo.repo,
             });
             console.log(comments_list);
-            const num_of_comments = comments_list.length;
+            const num_of_comments = comments_list.data.length;
             console.log(num_of_comments);
             if(num_of_comments == 0){
               return github.issues.createComment({
@@ -106,12 +106,12 @@ jobs:
               });
             } else {
               return github.issues.updateComment({
-                comment_id: ${{ comments_list[num_of_comments-1].id }},
+                comment_id: ${{ comments_list.data[num_of_comments-1].id }},
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body:
                   // escape string body by encoding it as JSON
-                  ${{ toJSON(comments_list[num_of_comments-1].body) }} + "\n" +
+                  ${{ toJSON(comments_list.data[num_of_comments-1].body) }} + "\n" +
                   "from update Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
               });
             }
