@@ -83,7 +83,7 @@ jobs:
       # // For multi-line comments, we need more configurational information: https://octokit.github.io/rest.js/v18#pulls-create-review-comment
                 # "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
 
-      - name: Toolz (${{ env.PROJECT }}) link on PR
+      - name: Toolz (${{ env.PROJECT }}) link on PR-1
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v3
         with:
