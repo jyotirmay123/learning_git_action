@@ -83,36 +83,36 @@ jobs:
       # // For multi-line comments, we need more configurational information: https://octokit.github.io/rest.js/v18#pulls-create-review-comment
                 # "Toolz (${{ env.PROJECT }}): [compare_forecast](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }}&module=compare_forecasts)",
 
-      - name: Toolz (${{ env.PROJECT }}) link on PR-1
+      - name: Toolz (${{ env.PROJECT }}) link on PR1
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const comments_list = await github.issues.listComments({
+          script: >
+            const response = await github.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
+            const comments_list = response.data;
             console.log(comments_list);
-            const num_of_comments = comments_list.data.length;
-            console.log(num_of_comments);
+            const num_of_comments = comments_list.length;
             if(num_of_comments == 0){
               return github.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: "from create Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
+                body: "Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
               });
             } else {
               return github.issues.updateComment({
-                comment_id: ${{ comments_list.data[num_of_comments-1].id }},
+                comment_id: comments_list[num_of_comments-1].id,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body:
                   // escape string body by encoding it as JSON
-                  ${{ toJSON(comments_list.data[num_of_comments-1].body) }} + "\n" +
-                  "from update Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
+                  comments_list[num_of_comments-1].body) + "\n" +
+                  "Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
               });
             }
 # github.pulls.createReviewComment({
