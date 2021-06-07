@@ -111,7 +111,7 @@ jobs:
                 repo: context.repo.repo,
                 body:
                   // escape string body by encoding it as JSON
-                  comments_list[num_of_comments-1].body) + "\n" +
+                  comments_list[num_of_comments-1].body + "\n" +
                   "Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
               });
             }
