@@ -89,10 +89,16 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.pulls.createReviewComment({
-              pull_number: ${{ github.event.number }},
+            return github.issues.createComment({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: 'hi'
             })
+# github.pulls.createReviewComment({
+#   pull_number: ${{ github.event.number }},
+#   owner: context.repo.owner,
+#   repo: context.repo.repo,
+#   body: 'hi'
+# })
 
