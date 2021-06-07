@@ -102,7 +102,7 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: "Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
+                body: "from create: Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
               });
             } else {
               return github.issues.updateComment({
@@ -112,7 +112,7 @@ jobs:
                 body:
                   // escape string body by encoding it as JSON
                   comments_list[num_of_comments-1].body + "\n" +
-                  "Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
+                  "from update: Toolz (${{ env.PROJECT }}): [datasci-toolz](https://toolz.7learnings.com/streamlit/?project=${{ env.PROJECT }}&run_identifier=${{ env.RUN_ID }}&env=${{ env.RUN_ENV }})",
               });
             }
 # github.pulls.createReviewComment({
