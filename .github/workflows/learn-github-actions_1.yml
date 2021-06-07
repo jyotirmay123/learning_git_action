@@ -97,6 +97,8 @@ jobs:
             const comments_list = response.data;
             console.log(comments_list);
             const num_of_comments = comments_list.length;
+            console.log("NUM OF COMMENT HERE::");
+            console.log(num_of_comments);
             if(num_of_comments == 0){
               return github.issues.createComment({
                 issue_number: context.issue.number,
