@@ -82,13 +82,13 @@ jobs:
       #       })
 
       - name: PR comment
-        if: github.event_name == 'pull_request' && always()
+        if: github.event_name == 'pull_request'
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.pulls.createReviewComment({
-              pull_number: ${{ github.event.comment.id }},
+              pull_number: ${{ github.event.number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body:
